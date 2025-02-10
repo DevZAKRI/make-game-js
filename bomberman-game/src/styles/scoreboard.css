@@ -1,0 +1,17 @@
+#scoreboard {
+    display: flex;
+    justify-content: space-between;
+    width: 95vw;
+    max-width: 1200px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    box-sizing: border-box;
+    border-bottom: 2px solid white;
+    top: 0;
+    left: 0;
+}
+
+#scoreboard div {
+    font-size: 18px;
+    margin: 0 10px;
+}
