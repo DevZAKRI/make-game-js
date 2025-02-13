@@ -1,6 +1,3 @@
-
-
-
 export class Bomb {
     constructor(x, y, game) {
         this.x = x;

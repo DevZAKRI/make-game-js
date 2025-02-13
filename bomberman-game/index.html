@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bomberman Game</title>
-    <link rel="stylesheet" href="./src/styles/styles.css">
+    <link rel="stylesheet" href="./src/styles/style.css">
 </head>
 <body>
     <div id="start-menu">
@@ -18,16 +18,15 @@
         <button id="restart-btn">Restart</button>
     </div>
 
-    <div id="scoreboard" style="display: none;">
-        <div>Timer: <span id="timer">0</span></div>
-        <div>Score: <span id="score">0</span></div>
-        <div>Lives: <span id="lives">3</span></div>
-        <div>FPS: <span id="fps">0</span></div>
-        <div>Level: <span id="level">1</span></div>
-        <div id="pause-btn">Pause</div>
+    <div id="scoreboard">
+        <div id="timer" title="Timer">⏲️: 00:00</div>
+        <div id="score" title="Score">⭐: 0</div>
+        <div id="lives" title="Health">❤️: 3</div>
+        <div id="level" title="level">⚔️: 1</div>
+        <div id="pause-btn" title="Pause">⏸️</div>
     </div>
 
-    <div id="game-container"></div>
+    <div id="game_container"></div>
 
     <script src="./src/game.js" type="module"></script>
 </body>

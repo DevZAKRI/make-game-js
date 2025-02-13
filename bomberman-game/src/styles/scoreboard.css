@@ -1,17 +1,40 @@
 #scoreboard {
-    display: flex;
+    display: none;
     justify-content: space-between;
-    width: 95vw;
-    max-width: 1200px;
-    padding: 10px;
+    align-items: center;
+    width: 90vmin; 
+    max-width: 90vmin; 
     background: rgba(0, 0, 0, 0.6);
     box-sizing: border-box;
+    font-size: clamp(14px, 2.5vmin, 18px);
     border-bottom: 2px solid white;
-    top: 0;
-    left: 0;
 }
 
 #scoreboard div {
-    font-size: 18px;
-    margin: 0 10px;
+    padding: 5px 2px; 
+    border-left: 1px solid orange;
+    border-right: 1px solid orange;
+    border-radius: 4px;
+    text-align: center; 
+    flex: 1; 
+}
+
+#pause-btn {
+    cursor: pointer;
+}
+
+@media (max-width: 450px) {
+    #scoreboard {
+        flex-direction: column; 
+        padding: 5px;
+    }
+
+    #scoreboard div {
+        width: 100%;
+        margin: 5px 0; 
+        border-left: none;
+        border-right: none;
+        border-top: 1px solid orange;
+        border-bottom: 1px solid orange;
+    }
 }
