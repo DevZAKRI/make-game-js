@@ -1,0 +1,74 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #333;
+    color: white;
+}
+
+.hidden {
+    display: none;
+}
+
+#start-menu, #game-over, #win-screen, #pause-menu {
+    text-align: center;
+}
+
+#game-container {
+    position: relative;
+    width: 90%;
+    max-width: 800px;
+    height: 80vh;
+    max-height: 600px;
+    background-color: #222;
+    border: 2px solid #444;
+}
+
+#game-info {
+    padding: 10px;
+    background-color: #444;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#game-area {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 40px);
+    overflow: hidden;
+}
+
+#paddle {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 15%;
+    max-width: 100px;
+    height: 2%;
+    background-color: #00ff00;
+}
+
+#ball {
+    position: absolute;
+    width: 2%;
+    max-width: 20px;
+    height: 2%;
+    max-height: 20px;
+    background-color: #ff0000;
+    border-radius: 50%;
+}
+
+.brick {
+    position: absolute;
+    width: 10%;
+    max-width: 75px;
+    height: 3%;
+    max-height: 20px;
+    background-color: #0077ff;
+    border: 1px solid #0055cc;
+}
