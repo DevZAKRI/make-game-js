@@ -1,4 +1,5 @@
 let currentLevel = 1;
+let lives = 3
 
 document.addEventListener('DOMContentLoaded', () => {
     const startMenu = document.getElementById('start-menu');
@@ -136,6 +137,7 @@ function gameStart() {
     let ballSpeedY = 0.5;
 
     function moveBall() {
+        const livesValue = document.getElementById('lives')
         const ballRect = ball.getBoundingClientRect();
         const gameAreaRect = gameArea.getBoundingClientRect();
         const paddleRect = paddle.getBoundingClientRect();
@@ -157,7 +159,7 @@ function gameStart() {
             ballSpeedY *= -1;
             newTop = ball.offsetHeight / 2
         }
-
+       
         if (
             ballRect.bottom >= paddleRect.top &&
             ballRect.left < paddleRect.right &&
@@ -166,12 +168,36 @@ function gameStart() {
             ballSpeedY = -Math.abs(ballSpeedY);
         }
 
+        const bricksArray = document.querySelectorAll('.brick');
+        bricksArray.forEach(brick => {
+            const brickRect = brick.getBoundingClientRect();
+            if (
+                ballRect.bottom >= brickRect.top &&
+                ballRect.left < brickRect.right &&
+                ballRect.right > brickRect.left &&
+                brick.getAttribute('data-hit') === 'false'
+            ) {
+                console.log('a Brick hit')
+                ballSpeedY *= -1; 
+                brick.setAttribute('data-hit', 'true'); 
+                brick.style.display = 'none'; 
+            }
+        });
+
         if (newTop + ballRect.height >= gameAreaRect.height) {
             console.log("Ball missed the paddle! Resetting...");
+            lives--;
+            livesValue.textContent = lives;
             newLeft = gameAreaRect.width / 2 - ballRect.width / 2;
             newTop = gameAreaRect.height / 2 - ballRect.height / 2;
             ballSpeedY = -3;
+
+            if (lives <= 0) {
+                alert("Game Over!");
+                return;
+            }
         }
+
 
         ball.style.left = `${newLeft}px`;
         ball.style.top = `${newTop}px`;
