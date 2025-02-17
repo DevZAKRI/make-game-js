@@ -168,21 +168,21 @@ function gameStart() {
             ballSpeedY = -Math.abs(ballSpeedY);
         }
 
-        const bricksArray = document.querySelectorAll('.brick');
-        bricksArray.forEach(brick => {
-            const brickRect = brick.getBoundingClientRect();
-            if (
-                ballRect.bottom >= brickRect.top &&
-                ballRect.left < brickRect.right &&
-                ballRect.right > brickRect.left &&
-                brick.getAttribute('data-hit') === 'false'
-            ) {
-                console.log('a Brick hit')
-                ballSpeedY *= -1; 
-                brick.setAttribute('data-hit', 'true'); 
-                brick.style.display = 'none'; 
-            }
-        });
+        // const bricksArray = document.querySelectorAll('.brick');
+        // bricksArray.forEach(brick => {
+        //     const brickRect = brick.getBoundingClientRect();
+        //     if (
+        //         ballRect.bottom >= brickRect.top &&
+        //         ballRect.left < brickRect.right &&
+        //         ballRect.right > brickRect.left &&
+        //         brick.getAttribute('data-hit') === 'false'
+        //     ) {
+        //         console.log('a Brick hit')
+        //         ballSpeedY *= -1; 
+        //         brick.setAttribute('data-hit', 'true'); 
+        //         brick.style.display = 'none'; 
+        //     }
+        // });
 
         if (newTop + ballRect.height >= gameAreaRect.height) {
             console.log("Ball missed the paddle! Resetting...");
