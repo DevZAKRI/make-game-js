@@ -1,5 +1,5 @@
 let currentLevel = 1;
-let lives = 3
+let lives = 3;
 
 document.addEventListener('DOMContentLoaded', () => {
     const startMenu = document.getElementById('start-menu');
@@ -23,7 +23,7 @@ function createGameUI() {
     livesSpan.textContent = 'Lives: ';
     const livesValue = document.createElement('span');
     livesValue.id = 'lives';
-    livesValue.textContent = '3';
+    livesValue.textContent = lives;
     livesSpan.appendChild(livesValue);
 
     const timerSpan = document.createElement('span');
@@ -63,147 +63,142 @@ function createGameUI() {
 
     document.body.appendChild(gameContainer);
 
-    function generateBricks(level) {
-        const brickArea = document.getElementById('bricks');
-        const brickWidth = gameArea.offsetWidth / 10;
-        const brickHeight = 30; 
-        const numBricksPerRow = Math.floor(gameArea.offsetWidth / brickWidth);
-        const numRows = 5; 
-        const totalWidth = numBricksPerRow * brickWidth; 
-        const totalHeight = numRows * brickHeight;
+    generateBricks(currentLevel);
+}
 
-        for (let row = 0; row < numRows; row++) {
-            for (let col = 0; col < numBricksPerRow; col++) {
-                const brick = document.createElement('div');
-                brick.classList.add('brick');
-                brick.style.width = `${brickWidth}px`;
-                brick.style.height = `${brickHeight}px`;
-                brickArea.appendChild(brick);
-            }
+
+function generateBricks(level) {
+    const brickArea = document.getElementById('bricks');
+    const gameArea = document.getElementById('game-area');
+    brickArea.innerHTML = '';
+
+    const brickWidth = gameArea.offsetWidth / 10;
+    const brickHeight = 30;
+    const numBricksPerRow = Math.floor(gameArea.offsetWidth / brickWidth);
+    const numRows = 5;
+    const colors = ['red', 'orange', 'yellow', 'green', 'blue']
+
+    for (let row = 0; row < numRows; row++) {
+        for (let col = 0; col < numBricksPerRow; col++) {
+            const brick = document.createElement('div');
+            brick.classList.add('brick');
+            brick.style.width = `${brickWidth}px`;
+            brick.style.height = `${brickHeight}px`;
+            brick.style.left = `${col * brickWidth}px`;
+            brick.style.top = `${row * brickHeight}px`;
+            brick.style.backgroundColor = colors[row % colors.length]
+            brick.setAttribute('data-hit', 'false');
+            brickArea.appendChild(brick);
         }
     }
-
-    generateBricks(currentLevel);
 }
 
 function gameStart() {
     const gameArea = document.getElementById('game-area');
     const paddle = document.getElementById('paddle');
     const ball = document.getElementById('ball');
+    const livesValue = document.getElementById('lives');
 
-    let paddleSpeed = 5;
+    let paddleSpeed = 10;
     let moveLeft = false;
     let moveRight = false;
 
-    // Listen for key presses
     document.addEventListener('keydown', (event) => {
-        if (event.key === 'ArrowLeft' || event.key === 'a') {
-            moveLeft = true;
-        } else if (event.key === 'ArrowRight' || event.key === 'd') {
-            moveRight = true;
-        }
+        if (event.key === 'ArrowLeft' || event.key === 'a') moveLeft = true;
+        if (event.key === 'ArrowRight' || event.key === 'd') moveRight = true;
     });
 
     document.addEventListener('keyup', (event) => {
-        if (event.key === 'ArrowLeft' || event.key === 'a') {
-            moveLeft = false;
-        } else if (event.key === 'ArrowRight' || event.key === 'd') {
-            moveRight = false;
-        }
+        if (event.key === 'ArrowLeft' || event.key === 'a') moveLeft = false;
+        if (event.key === 'ArrowRight' || event.key === 'd') moveRight = false;
     });
 
     function movePaddle() {
         const gameAreaRect = gameArea.getBoundingClientRect();
         const paddleWidth = paddle.offsetWidth;
-        let newLeft = paddle.offsetLeft;
+        let newLeft = paddle.offsetLeft
 
         if (moveLeft) {
             newLeft -= paddleSpeed;
-        }
+        } 
         if (moveRight) {
             newLeft += paddleSpeed;
         }
 
-        newLeft = Math.max(paddleWidth / 2 + 1, Math.min(gameAreaRect.width - paddleWidth / 2 - 1, newLeft));
+        newLeft = Math.max(0, Math.min(gameAreaRect.width - paddleWidth, newLeft));
 
         paddle.style.left = `${newLeft}px`;
-
         requestAnimationFrame(movePaddle);
     }
 
     movePaddle();
 
-    let ballSpeedX = 0.5;
-    let ballSpeedY = 0.5;
+    let ballSpeedX = 2;
+    let ballSpeedY = 2;
 
     function moveBall() {
-        const livesValue = document.getElementById('lives')
         const ballRect = ball.getBoundingClientRect();
         const gameAreaRect = gameArea.getBoundingClientRect();
         const paddleRect = paddle.getBoundingClientRect();
+        const bricks = document.querySelectorAll('.brick');
 
-        let newLeft = ball.offsetLeft + ballSpeedX;
-        let newTop = ball.offsetTop + ballSpeedY;
+        let newLeft = parseFloat(ball.style.left || gameAreaRect.width / 2);
+        let newTop = parseFloat(ball.style.top || gameAreaRect.height / 2);
 
-        if (newLeft <= 0) {
+        if (newLeft <= 0 || newLeft + ballRect.width >= gameAreaRect.width) {
             ballSpeedX *= -1;
-            newLeft = ball.offsetWidth / 2;
-        }
-
-        if (newLeft + ballRect.width >= gameAreaRect.width) {
-            ballSpeedX *= -1;
-            newLeft = gameAreaRect.width - ballRect.width;
         }
 
         if (newTop <= 0) {
             ballSpeedY *= -1;
-            newTop = ball.offsetHeight / 2
         }
-       
+
         if (
             ballRect.bottom >= paddleRect.top &&
+            ballRect.top < paddleRect.bottom &&
             ballRect.left < paddleRect.right &&
             ballRect.right > paddleRect.left
         ) {
-            ballSpeedY = -Math.abs(ballSpeedY);
+            ballSpeedY *= -1;
         }
 
-        // const bricksArray = document.querySelectorAll('.brick');
-        // bricksArray.forEach(brick => {
-        //     const brickRect = brick.getBoundingClientRect();
-        //     if (
-        //         ballRect.bottom >= brickRect.top &&
-        //         ballRect.left < brickRect.right &&
-        //         ballRect.right > brickRect.left &&
-        //         brick.getAttribute('data-hit') === 'false'
-        //     ) {
-        //         console.log('a Brick hit')
-        //         ballSpeedY *= -1; 
-        //         brick.setAttribute('data-hit', 'true'); 
-        //         brick.style.display = 'none'; 
-        //     }
-        // });
+        bricks.forEach(brick => {
+            const brickRect = brick.getBoundingClientRect();
+            if (
+                ballRect.bottom >= brickRect.top &&
+                ballRect.top < brickRect.bottom &&
+                ballRect.left < brickRect.right &&
+                ballRect.right > brickRect.left &&
+                brick.getAttribute('data-hit') === 'false'
+            ) {
+                brick.setAttribute('data-hit', 'true');
+                brick.style.visibility = 'hidden';
+                ballSpeedY *= -1;
+            }
+        });
 
         if (newTop + ballRect.height >= gameAreaRect.height) {
-            console.log("Ball missed the paddle! Resetting...");
             lives--;
             livesValue.textContent = lives;
-            newLeft = gameAreaRect.width / 2 - ballRect.width / 2;
-            newTop = gameAreaRect.height / 2 - ballRect.height / 2;
-            ballSpeedY = -3;
-
             if (lives <= 0) {
-                alert("Game Over!");
+                alert('Game Over!');
                 return;
             }
+            resetBall();
         }
 
-
-        ball.style.left = `${newLeft}px`;
-        ball.style.top = `${newTop}px`;
+        ball.style.left = `${newLeft + ballSpeedX}px`;
+        ball.style.top = `${newTop + ballSpeedY}px`;
 
         requestAnimationFrame(moveBall);
     }
+
+    function resetBall() {
+        ball.style.left = `${gameArea.offsetWidth / 2}px`;
+        ball.style.top = `${gameArea.offsetHeight / 2}px`;
+        ballSpeedY = -2;
+    }
+    
 
     moveBall();
 }
