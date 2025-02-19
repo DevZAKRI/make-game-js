@@ -104,7 +104,7 @@ function gameStart() {
     let paddleSpeed = 10;
     let moveLeft = false;
     let moveRight = false;
-    let gameActive = true; // Add a flag to check if the game is active
+    let gameActive = true;
 
     document.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowLeft' || event.key === 'a') moveLeft = true;
@@ -117,7 +117,7 @@ function gameStart() {
     });
 
     function movePaddle() {
-        if (!gameActive) return; // Stop moving the paddle if the game is over
+        if (!gameActive) return; 
 
         const gameAreaRect = gameArea.getBoundingClientRect();
         const paddleWidth = paddle.offsetWidth;
