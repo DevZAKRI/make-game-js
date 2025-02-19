@@ -51,6 +51,7 @@ body {
     color: white;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+    box-sizing: border-box;
 }
 
 #game-area {
@@ -62,15 +63,19 @@ body {
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 #paddle {
     position: absolute;
-    width: 15%;
-    height: 3%;
+    width: 100px;
+    min-width: 60px;
+    max-width: 15%;
+    height: 20px;
     background-color: #4caf50;
     border-radius: 10px;
-    bottom: 0px;
+    bottom: 20px;
+    left: 44%;
 }
 
 #ball {
@@ -79,24 +84,31 @@ body {
     height: 20px;
     background-color: #ff9800;
     border-radius: 50%;
+    left: 50%;
+    right: 50%;
+    transform: translate(-50%, 50%);
 }
 
 #bricks {
-    width: 80%;
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    position: relative;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    height: auto;
+    display: grid;
+    gap: 4px;
+    margin-top: 20px;
 }
 
 
 .brick {
-    position: absolute;
+    position: relative;
     /* background-color: #f44336;*/
     border: 1px solid #000000;
     box-sizing: border-box;
     border-radius: 3px;
+    aspect-ratio: 2/1;
+    width: 100%;
 }
 
 #pause-menu {
@@ -112,7 +124,7 @@ body {
     z-index: 10;
 }
 
-#level-message, #game-over, #victory-message {
+#finish-message, #game-over, #victory-message {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -123,4 +135,8 @@ body {
     border-radius: 10px;
     text-align: center;
     z-index: 10;
+}
+
+@media (max-width: 768px) {
+
 }
