@@ -107,13 +107,13 @@ function gameStart() {
     let gameActive = true;
 
     document.addEventListener('keydown', (event) => {
-        if (event.key === 'ArrowLeft' || event.key === 'a') moveLeft = true;
-        if (event.key === 'ArrowRight' || event.key === 'd') moveRight = true;
+        if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') moveLeft = true;
+        if (event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') moveRight = true;
     });
 
     document.addEventListener('keyup', (event) => {
-        if (event.key === 'ArrowLeft' || event.key === 'a') moveLeft = false;
-        if (event.key === 'ArrowRight' || event.key === 'd') moveRight = false;
+        if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') moveLeft = false;
+        if (event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') moveRight = false;
     });
 
     function movePaddle() {
