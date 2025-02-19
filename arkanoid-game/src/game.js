@@ -144,8 +144,8 @@ function gameStart() {
 
     movePaddle();
 
-    let ballSpeedX = 2;
-    let ballSpeedY = 2;
+    let ballSpeedX = 1;
+    let ballSpeedY = 1;
 
     function moveBall() {
         if (!isPaused) {
@@ -157,7 +157,7 @@ function gameStart() {
             let newLeft = parseFloat(ball.style.left || gameAreaRect.width / 2);
             let newTop = parseFloat(ball.style.top || gameAreaRect.height / 2);
 
-            if (newLeft <= 0 || newLeft + ballRect.width >= gameAreaRect.width) {
+            if (newLeft <= ballRect.width/2 || newLeft + ballRect.width > gameAreaRect.width) {
                 ballSpeedX *= -1;
             }
 
