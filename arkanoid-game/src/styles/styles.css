@@ -34,11 +34,12 @@ body {
 }
 
 #game-container {
-    width: 800px;
+    width: 60%;
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 85vh;
+    gap: 2px;
 }
 
 #game-info {
@@ -54,7 +55,7 @@ body {
 
 #game-area {
     position: relative;
-    width: 800px;
+    width: 100%;
     height: 600px;
     background-color: #222;
     border: 2px solid #444;
@@ -65,8 +66,8 @@ body {
 
 #paddle {
     position: absolute;
-    width: 100px;
-    height: 20px;
+    width: 15%;
+    height: 3%;
     background-color: #4caf50;
     border-radius: 10px;
     bottom: 0px;
@@ -81,8 +82,14 @@ body {
 }
 
 #bricks {
-    background-color: #f0f0f0;
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
 }
+
 
 .brick {
     position: absolute;
