@@ -1,4 +1,3 @@
-let currentLevel = 1;
 let lives = 3;
 let score = 0
 let gameTimer = 0
@@ -35,11 +34,6 @@ function createGameUI() {
 
     const timerSpan = document.createElement('span');
     timerSpan.innerHTML = 'Time: <span id="timer">0s</span>';
-    // const timerValue = document.createElement('span');
-    // timerValue.id = 'timer';
-    // timerValue.textContent = '0';
-    // timerSpan.appendChild(timerValue);
-    // timerSpan.appendChild(document.createTextNode('s'));
 
 
     const pauseButton = document.createElement('button');
@@ -49,7 +43,6 @@ function createGameUI() {
 
     gameInfo.appendChild(livesSpan);
     gameInfo.appendChild(timerSpan);
-    // gameInfo.appendChild(levelSpan);
     gameInfo.appendChild(pauseButton);
 
     const gameArea = document.createElement('div');
@@ -73,7 +66,7 @@ function createGameUI() {
 
     document.body.appendChild(gameContainer);
 
-    generateBricks(currentLevel);
+    generateBricks();
 }
 
 
@@ -82,20 +75,18 @@ function generateBricks() {
     const gameArea = document.getElementById('game-area');
     brickArea.innerHTML = '';
 
-    const brickWidth = gameArea.offsetWidth / 10;
-    const brickHeight = 30;
-    const numBricksPerRow = Math.floor(gameArea.offsetWidth / brickWidth);
+    const gameWidth = gameArea.clientWidth
+    const desiredBrickWidth = 50
+    const numBricksPerRow = Math.floor(gameWidth / desiredBrickWidth);
     const numRows = 5;
     const colors = ['red', 'orange', 'yellow', 'green', 'blue']
+
+    brickArea.style.gridTemplateColumns = `repeat(${numBricksPerRow}, 1fr)`;
 
     for (let row = 0; row < numRows; row++) {
         for (let col = 0; col < numBricksPerRow; col++) {
             const brick = document.createElement('div');
             brick.classList.add('brick');
-            brick.style.width = `${brickWidth}px`;
-            brick.style.height = `${brickHeight}px`;
-            brick.style.left = `${col * brickWidth}px`;
-            brick.style.top = `${row * brickHeight}px`;
             brick.style.backgroundColor = colors[row % colors.length]
             brick.setAttribute('data-hit', 'false');
             brickArea.appendChild(brick);
@@ -103,9 +94,12 @@ function generateBricks() {
     }
 }
 
+window.addEventListener('resize', () => {
+    location.reload()
+})
+
 
 function gameStart() {
-    gameStarted = true
     const gameArea = document.getElementById('game-area');
     const paddle = document.getElementById('paddle');
     const ball = document.getElementById('ball');
@@ -131,7 +125,7 @@ function gameStart() {
     function movePaddle() {
         if (!isPaused) {
             const gameAreaRect = gameArea.getBoundingClientRect();
-            const paddleWidth = paddle.offsetWidth;
+            const paddleWidth = paddle.offsetWidth + 2;
             let newLeft = paddle.offsetLeft
 
             if (moveLeft) {
@@ -141,7 +135,7 @@ function gameStart() {
                 newLeft += paddleSpeed;
             }
 
-            newLeft = Math.max(0, Math.min(gameAreaRect.width - paddleWidth, newLeft));
+            newLeft = Math.max(0, Math.min(gameAreaRect.width - (paddleWidth + 2), newLeft));
 
             paddle.style.left = `${newLeft}px`;
             requestAnimationFrame(movePaddle);
@@ -193,17 +187,21 @@ function gameStart() {
                     brick.style.visibility = 'hidden';
                     ballSpeedY *= -1;
                 }
+                if (Array.from(bricks).every(b => b.getAttribute('data-hit') === 'true')) {
+                    gameFinish()
+                }
             });
 
             if (newTop + ballRect.height >= gameAreaRect.height) {
                 lives--;
+                resetBall();
                 livesValue.textContent = lives;
                 if (lives <= 0) {
                     alert('Game Over!');
+                    clearInterval(timerInterval)
                     location.reload();
                     return;
                 }
-                resetBall();
             }
 
             ball.style.left = `${newLeft + ballSpeedX}px`;
@@ -267,4 +265,20 @@ function pauseMenu() {
     pauseMenu.appendChild(resumeButton)
 
     gameArea.appendChild(pauseMenu)
+}
+
+function gameFinish() {
+    const gameArea = document.getElementById('game-area');
+
+    const finishMessage = document.createElement('div');
+    finishMessage.id = 'finish-message';
+
+    const finishTitle = document.createElement('h2');
+    finishTitle.textContent = 'Game Completed!';
+
+    finishMessage.appendChild(finishTitle)
+    gameArea.appendChild(finishMessage);
+
+    isPaused = true
+    clearInterval(timerInterval)
 }
