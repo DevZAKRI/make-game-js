@@ -191,6 +191,7 @@ function gameStart() {
                 alert('Game Over!');
                 gameActive = false; 
                 clearInterval(timerInterval); 
+                location.reload();
                 return;
             }
             resetBall();
