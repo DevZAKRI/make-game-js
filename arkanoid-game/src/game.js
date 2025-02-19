@@ -1,10 +1,9 @@
-
-
 let lives = 3;
-let score = 0
-let gameTimer = 0
-let timerInterval
-let isPaused = false
+let score = 0;
+let gameTimer = 0;
+let timerInterval;
+let isPaused = false;
+let isballMoving = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     const startMenu = document.getElementById('start-menu');
@@ -31,17 +30,13 @@ function createGameUI() {
     livesValue.textContent = lives;
     livesSpan.appendChild(livesValue);
 
-    // const levelSpan = document.createElement('span')
-    // levelSpan.innerHTML = 'Level: <span id="level">1</span>'
-
     const timerSpan = document.createElement('span');
     timerSpan.innerHTML = 'Time: <span id="timer">0s</span>';
-
 
     const pauseButton = document.createElement('button');
     pauseButton.id = 'pause-button';
     pauseButton.textContent = 'Pause';
-    pauseButton.addEventListener('click', togglePause)
+    pauseButton.addEventListener('click', togglePause);
 
     gameInfo.appendChild(livesSpan);
     gameInfo.appendChild(timerSpan);
@@ -67,21 +62,20 @@ function createGameUI() {
     gameContainer.appendChild(gameArea);
 
     document.body.appendChild(gameContainer);
-
+    paddle.style.left = `44%`;
     generateBricks();
 }
-
 
 function generateBricks() {
     const brickArea = document.getElementById('bricks');
     const gameArea = document.getElementById('game-area');
     brickArea.innerHTML = '';
 
-    const gameWidth = gameArea.clientWidth
-    const desiredBrickWidth = 50
+    const gameWidth = gameArea.clientWidth;
+    const desiredBrickWidth = 50;
     const numBricksPerRow = Math.floor(gameWidth / desiredBrickWidth);
     const numRows = 5;
-    const colors = ['red', 'orange', 'yellow', 'green', 'blue']
+    const colors = ['red', 'orange', 'yellow', 'green', 'blue'];
 
     brickArea.style.gridTemplateColumns = `repeat(${numBricksPerRow}, 1fr)`;
 
@@ -89,7 +83,7 @@ function generateBricks() {
         for (let col = 0; col < numBricksPerRow; col++) {
             const brick = document.createElement('div');
             brick.classList.add('brick');
-            brick.style.backgroundColor = colors[row % colors.length]
+            brick.style.backgroundColor = colors[row % colors.length];
             brick.setAttribute('data-hit', 'false');
             brickArea.appendChild(brick);
         }
@@ -97,9 +91,8 @@ function generateBricks() {
 }
 
 window.addEventListener('resize', () => {
-    location.reload()
-})
-
+    location.reload();
+});
 
 function gameStart() {
     const gameArea = document.getElementById('game-area');
@@ -115,9 +108,7 @@ function gameStart() {
     document.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') moveLeft = true;
         if (event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') moveRight = true;
-        if (event.key === 'Space'){ // need logic to handle when life lost
-            isPaused = !isPaused
-        };
+        if (event.key === ' ') togglePause(); // Spacebar toggles pause
     });
 
     document.addEventListener('keyup', (event) => {
@@ -125,13 +116,13 @@ function gameStart() {
         if (event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') moveRight = false;
     });
 
-    timer()
+    timer();
 
     function movePaddle() {
         if (!isPaused) {
             const gameAreaRect = gameArea.getBoundingClientRect();
             const paddleWidth = paddle.offsetWidth;
-            let newLeft = paddle.offsetLeft
+            let newLeft = paddle.offsetLeft;
 
             if (moveLeft) {
                 newLeft -= paddleSpeed;
@@ -140,11 +131,11 @@ function gameStart() {
                 newLeft += paddleSpeed;
             }
 
-            newLeft = Math.max(0, Math.min(gameAreaRect.width - paddleWidth -3, newLeft));
+            newLeft = Math.max(0, Math.min(gameAreaRect.width - paddleWidth - 3, newLeft));
 
             paddle.style.left = `${newLeft}px`;
-            requestAnimationFrame(movePaddle);
         }
+        requestAnimationFrame(movePaddle);
     }
 
     movePaddle();
@@ -162,7 +153,7 @@ function gameStart() {
             let newLeft = parseFloat(ball.style.left || gameAreaRect.width / 2);
             let newTop = parseFloat(ball.style.top || gameAreaRect.height / 2);
 
-            if (newLeft <= ballRect.width/2 || newLeft + ballRect.width >= gameAreaRect.width) {
+            if (newLeft <= ballRect.width / 2 || newLeft + ballRect.width >= gameAreaRect.width) {
                 ballSpeedX *= -1;
             }
 
@@ -177,6 +168,7 @@ function gameStart() {
                 ballRect.right > paddleRect.left
             ) {
                 ballSpeedY *= -1.05;
+                ball.style.top = `${paddleRect.top - ballRect.height}px`;
             }
 
             bricks.forEach(brick => {
@@ -193,7 +185,7 @@ function gameStart() {
                     ballSpeedY *= -1;
                 }
                 if (Array.from(bricks).every(b => b.getAttribute('data-hit') === 'true')) {
-                    gameFinish()
+                    gameFinish();
                 }
             });
 
@@ -203,21 +195,19 @@ function gameStart() {
                 livesValue.textContent = lives;
                 if (lives <= 0) {
                     alert('Game Over!');
-                    clearInterval(timerInterval)
+                    clearInterval(timerInterval);
                     location.reload();
                     return;
                 } else {
-                    // isPaused = true
-                    newLeft = gameAreaRect.width/2 - ballRect.width
-                    newTop = gameAreaRect.height/2 - ballRect.height
+                    newLeft = gameAreaRect.width / 2 - ballRect.width;
+                    newTop = gameAreaRect.height / 2 - ballRect.height;
                 }
             }
 
             ball.style.left = `${newLeft + ballSpeedX}px`;
             ball.style.top = `${newTop + ballSpeedY}px`;
-
-            requestAnimationFrame(moveBall);
         }
+        requestAnimationFrame(moveBall);
     }
 
     function resetBall() {
@@ -228,52 +218,57 @@ function gameStart() {
     }
 
     moveBall();
-    timer(); 
 }
 
 function timer() {
     clearInterval(timerInterval);
     timerInterval = setInterval(() => {
         if (!isPaused) {
-            gameTimer++
-            document.getElementById('timer').textContent = gameTimer + "s"
+            gameTimer++;
+            document.getElementById('timer').textContent = gameTimer + "s";
         }
-    }, 1000)
+    }, 1000);
 }
 
 function togglePause() {
-    isPaused = !isPaused
+    isPaused = !isPaused;
 
-    const pauseButton = document.getElementById('pause-button')
-
+    const pauseButton = document.getElementById('pause-button');
     if (isPaused) {
-        pauseButton.textContent = 'Resume'
-        pauseMenu()
+        pauseButton.textContent = 'Resume';
+        pauseMenu();
     } else {
-        pauseButton.textContent = 'Pause'
-        const pauseMenu = document.getElementById('pause-menu')
-        if (pauseMenu) {
-            pauseMenu.remove()
+        pauseButton.textContent = 'Pause';
+        const pauseMenuElement = document.getElementById('pause-menu');
+        if (pauseMenuElement) {
+            pauseMenuElement.remove();
         }
     }
 }
 
 function pauseMenu() {
-    const gameArea = document.getElementById('game-area')
-    const pauseMenu = document.createElement('div')
-    pauseMenu.id = 'pause-menu'
+    const gameArea = document.getElementById('game-area');
+    const pauseMenu = document.createElement('div');
+    pauseMenu.id = 'pause-menu';
 
-    const pauseTitle = document.createElement('h2')
-    pauseTitle.textContent = 'Game Paused'
-    pauseMenu.appendChild(pauseTitle)
+    const pauseTitle = document.createElement('h2');
+    pauseTitle.textContent = 'Game Paused';
+    pauseMenu.appendChild(pauseTitle);
 
-    const resumeButton = document.createElement('button')
-    resumeButton.id = 'resume-button'
-    resumeButton.textContent = 'Resume Game'
-    resumeButton.addEventListener('click', togglePause)
-    pauseMenu.appendChild(resumeButton)
+    const resumeButton = document.createElement('button');
+    resumeButton.id = 'resume-button';
+    resumeButton.textContent = 'Resume Game';
+    resumeButton.addEventListener('click', togglePause);
+    const restartButton = document.createElement('button');
+    restartButton.id = 'restart-button';
+    restartButton.textContent = 'Restart Game';
+    restartButton.addEventListener('click', () => {
+        location.reload()
+    });
+    pauseMenu.appendChild(resumeButton);
+    pauseMenu.appendChild(restartButton)
 
-    gameArea.appendChild(pauseMenu)
+    gameArea.appendChild(pauseMenu);
 }
 
 function gameFinish() {
@@ -285,9 +280,9 @@ function gameFinish() {
     const finishTitle = document.createElement('h2');
     finishTitle.textContent = 'Game Completed!';
 
-    finishMessage.appendChild(finishTitle)
+    finishMessage.appendChild(finishTitle);
     gameArea.appendChild(finishMessage);
 
-    isPaused = true
-    clearInterval(timerInterval)
+    isPaused = true;
+    clearInterval(timerInterval);
 }

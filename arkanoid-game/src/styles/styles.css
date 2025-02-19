@@ -17,7 +17,7 @@ body {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
-#start-button, #restart-button, #pause-button, #resume-button {
+#start-button, #restart-button, #pause-button, #resume-button, #restart-button {
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
     background-color: #4caf50;
@@ -29,7 +29,7 @@ body {
     transition: background-color 0.3s;
 }
 
-#start-button:hover, #restart-button:hover, #pause-button:hover, #resume-button:hover {
+#start-button:hover, #restart-button:hover, #pause-button:hover, #resume-button:hover, #restart-button:hover {
     background-color: #45a049;
 }
 
@@ -84,8 +84,8 @@ body {
     height: 20px;
     background-color: #ff9800;
     border-radius: 50%;
-    left: 50%;
-    right: 50%;
+    /* left: 50%;
+    right: 50%; */
     transform: translate(-50%, 50%);
 }
 
