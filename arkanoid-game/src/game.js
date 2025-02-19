@@ -1,3 +1,5 @@
+
+
 let lives = 3;
 let score = 0
 let gameTimer = 0
@@ -113,6 +115,9 @@ function gameStart() {
     document.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') moveLeft = true;
         if (event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') moveRight = true;
+        if (event.key === 'Space'){ // need logic to handle when life lost
+            isPaused = !isPaused
+        };
     });
 
     document.addEventListener('keyup', (event) => {
@@ -125,7 +130,7 @@ function gameStart() {
     function movePaddle() {
         if (!isPaused) {
             const gameAreaRect = gameArea.getBoundingClientRect();
-            const paddleWidth = paddle.offsetWidth + 2;
+            const paddleWidth = paddle.offsetWidth;
             let newLeft = paddle.offsetLeft
 
             if (moveLeft) {
@@ -135,7 +140,7 @@ function gameStart() {
                 newLeft += paddleSpeed;
             }
 
-            newLeft = Math.max(0, Math.min(gameAreaRect.width - (paddleWidth + 2), newLeft));
+            newLeft = Math.max(0, Math.min(gameAreaRect.width - paddleWidth -3, newLeft));
 
             paddle.style.left = `${newLeft}px`;
             requestAnimationFrame(movePaddle);
@@ -157,7 +162,7 @@ function gameStart() {
             let newLeft = parseFloat(ball.style.left || gameAreaRect.width / 2);
             let newTop = parseFloat(ball.style.top || gameAreaRect.height / 2);
 
-            if (newLeft <= ballRect.width/2 || newLeft + ballRect.width > gameAreaRect.width) {
+            if (newLeft <= ballRect.width/2 || newLeft + ballRect.width >= gameAreaRect.width) {
                 ballSpeedX *= -1;
             }
 
@@ -201,6 +206,10 @@ function gameStart() {
                     clearInterval(timerInterval)
                     location.reload();
                     return;
+                } else {
+                    // isPaused = true
+                    newLeft = gameAreaRect.width/2 - ballRect.width
+                    newTop = gameAreaRect.height/2 - ballRect.height
                 }
             }
 
