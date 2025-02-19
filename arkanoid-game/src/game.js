@@ -69,7 +69,7 @@ function createGameUI() {
 }
 
 
-function generateBricks(level) {
+function generateBricks() {
     const brickArea = document.getElementById('bricks');
     const gameArea = document.getElementById('game-area');
     brickArea.innerHTML = '';
@@ -104,6 +104,7 @@ function gameStart() {
     let paddleSpeed = 10;
     let moveLeft = false;
     let moveRight = false;
+    let gameActive = true; // Add a flag to check if the game is active
 
     document.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowLeft' || event.key === 'a') moveLeft = true;
@@ -116,6 +117,8 @@ function gameStart() {
     });
 
     function movePaddle() {
+        if (!gameActive) return; // Stop moving the paddle if the game is over
+
         const gameAreaRect = gameArea.getBoundingClientRect();
         const paddleWidth = paddle.offsetWidth;
         let newLeft = paddle.offsetLeft
@@ -139,6 +142,8 @@ function gameStart() {
     let ballSpeedY = 2;
 
     function moveBall() {
+        if (!gameActive) return; 
+
         const ballRect = ball.getBoundingClientRect();
         const gameAreaRect = gameArea.getBoundingClientRect();
         const paddleRect = paddle.getBoundingClientRect();
@@ -184,6 +189,8 @@ function gameStart() {
             livesValue.textContent = lives;
             if (lives <= 0) {
                 alert('Game Over!');
+                gameActive = false; 
+                clearInterval(timerInterval); 
                 return;
             }
             resetBall();
@@ -198,18 +205,18 @@ function gameStart() {
     function resetBall() {
         ball.style.left = `${gameArea.offsetWidth / 2}px`;
         ball.style.top = `${gameArea.offsetHeight / 2}px`;
+        ballSpeedX = 2;
         ballSpeedY = -2;
     }
     
     moveBall();
+    timer(); 
 }
 
 function timer() {
-    clearInterval(timerInterval)
+    clearInterval(timerInterval);
     timerInterval = setInterval(() => {
-        gameTimer++
-        document.getElementById('timer').textContent = gameTimer + "s"
-    }, 1000)
+        gameTimer++;
+        document.getElementById('timer').textContent = gameTimer + "s";
+    }, 1000);
 }
-
-timer()
