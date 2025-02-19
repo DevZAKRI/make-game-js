@@ -200,6 +200,7 @@ function gameStart() {
                 livesValue.textContent = lives;
                 if (lives <= 0) {
                     alert('Game Over!');
+                    location.reload();
                     return;
                 }
                 resetBall();
