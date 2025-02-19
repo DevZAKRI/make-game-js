@@ -1,5 +1,7 @@
 let currentLevel = 1;
 let lives = 3;
+let gameTimer = 0
+let timerInterval
 
 document.addEventListener('DOMContentLoaded', () => {
     const startMenu = document.getElementById('start-menu');
@@ -27,12 +29,12 @@ function createGameUI() {
     livesSpan.appendChild(livesValue);
 
     const timerSpan = document.createElement('span');
-    timerSpan.textContent = 'Time: ';
-    const timerValue = document.createElement('span');
-    timerValue.id = 'timer';
-    timerValue.textContent = '0';
-    timerSpan.appendChild(timerValue);
-    timerSpan.appendChild(document.createTextNode('s'));
+    timerSpan.innerHTML = 'Time: <span id="timer">0</span>';
+    // const timerValue = document.createElement('span');
+    // timerValue.id = 'timer';
+    // timerValue.textContent = '0';
+    // timerSpan.appendChild(timerValue);
+    // timerSpan.appendChild(document.createTextNode('s'));
 
     const pauseButton = document.createElement('button');
     pauseButton.id = 'pause-button';
@@ -199,6 +201,15 @@ function gameStart() {
         ballSpeedY = -2;
     }
     
-
     moveBall();
 }
+
+function timer() {
+    clearInterval(timerInterval)
+    timerInterval = setInterval(() => {
+        gameTimer++
+        document.getElementById('timer').textContent = gameTimer + "s"
+    }, 1000)
+}
+
+timer()
