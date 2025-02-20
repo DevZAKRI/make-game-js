@@ -24,11 +24,21 @@ function createGameUI() {
     gameInfo.id = 'game-info';
 
     const livesSpan = document.createElement('span');
-    livesSpan.textContent = 'Lives: ';
+    livesSpan.id = 'lives-span'
+
+    const livesImage = document.createElement('img');
+
+    livesImage.src = '/arkanoid-game/src/heart.png'
+    livesImage.id = 'lives-img'
+    livesImage.style.width = '20px'
+    livesImage.style.height = '20px'
+
     const livesValue = document.createElement('span');
     livesValue.id = 'lives';
     livesValue.textContent = lives;
-    livesSpan.appendChild(livesValue);
+
+    livesSpan.appendChild(livesImage);
+    livesSpan.appendChild(livesValue)
 
     const Scorespan = document.createElement('span')
     Scorespan.innerHTML = 'Score: <span id="score">0</span>'
@@ -76,7 +86,7 @@ function generateBricks() {
 
     const gameWidth = gameArea.clientWidth;
     const desiredBrickWidth = 50;
-    const numBricksPerRow = Math.floor(gameWidth / desiredBrickWidth)-5;
+    const numBricksPerRow = Math.floor(gameWidth / desiredBrickWidth) - 5;
     const numRows = 2;
     const colors = ['red', 'orange', 'yellow', 'green', 'blue'];
 
@@ -103,7 +113,7 @@ function gameStart() {
     const ball = document.getElementById('ball');
     const livesValue = document.getElementById('lives');
 
-    let paddleSpeed = 5;
+    let paddleSpeed = 10;
     let moveLeft = false;
     let moveRight = false;
     let gameActive = true;
@@ -111,12 +121,12 @@ function gameStart() {
     document.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') moveLeft = true;
         if (event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') moveRight = true;
-        if (event.key === ' ') togglePause(); // Spacebar toggles pause
     });
 
     document.addEventListener('keyup', (event) => {
         if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') moveLeft = false;
         if (event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') moveRight = false;
+        if (event.key === ' ') togglePause();
     });
 
     timer();
@@ -143,8 +153,8 @@ function gameStart() {
 
     movePaddle();
 
-    let ballSpeedX = 1;
-    let ballSpeedY = -1;
+    let ballSpeedX = 3;
+    let ballSpeedY = -3;
 
     function moveBall() {
         if (!isPaused) {
@@ -163,7 +173,7 @@ function gameStart() {
 
             if (newTop <= 0) {
                 ballSpeedY *= -1;
-            }                                                                                                                                                                                                                                            
+            }
 
             if (
                 ballRect.bottom >= paddleRect.top &&
@@ -174,7 +184,7 @@ function gameStart() {
                 const paddleCenter = paddleRect.left + paddleRect.width / 2;
                 const ballCenter = ballRect.left + ballRect.width / 2;
                 const relativePosition = (ballCenter - paddleCenter) / (paddleRect.width / 2)
-                ballSpeedX = relativePosition * 2
+                ballSpeedX = relativePosition * 5
                 ballSpeedY *= -1.05;
                 ball.style.top = `${paddleRect.top - ballRect.height}px`;
             }
@@ -198,7 +208,7 @@ function gameStart() {
                 ) {
                     brick.setAttribute('data-hit', 'true');
                     brick.style.visibility = 'hidden';
-                    score.textContent= +score.textContent+1
+                    score.textContent = +score.textContent + 1
                     ballSpeedY *= -1;
                 }
                 if (Array.from(bricks).every(b => b.getAttribute('data-hit') === 'true')) {
@@ -231,8 +241,8 @@ function gameStart() {
     function resetBall() {
         ball.style.left = `${gameArea.offsetWidth / 2}px`;
         ball.style.top = `${gameArea.offsetHeight / 2}px`;
-        ballSpeedX = 2;
-        ballSpeedY = -2;
+        ballSpeedX = 3;
+        ballSpeedY = -3;
     }
 
     moveBall();
@@ -299,7 +309,15 @@ function gameFinish() {
     const finishTitle = document.createElement('h2');
     finishTitle.textContent = 'Game Completed!';
 
+    const restartButton = document.createElement('button');
+    restartButton.id = 'restart-button';
+    restartButton.textContent = 'Restart Game';
+    restartButton.addEventListener('click', () => {
+        location.reload()
+    });
+
     finishMessage.appendChild(finishTitle);
+    finishMessage.appendChild(restartButton)
     gameArea.appendChild(finishMessage);
 
     isPaused = true;
