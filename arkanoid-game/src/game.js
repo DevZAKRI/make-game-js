@@ -1,9 +1,8 @@
 let lives = 3;
-let score = 0;
+let gameScore = 0;
 let gameTimer = 0;
 let timerInterval;
 let isPaused = false;
-let isballMoving = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     const startMenu = document.getElementById('start-menu');
@@ -86,7 +85,7 @@ function generateBricks() {
 
     const gameWidth = gameArea.clientWidth;
     const desiredBrickWidth = 50;
-    const numBricksPerRow = Math.floor(gameWidth / desiredBrickWidth) - 5;
+    const numBricksPerRow = Math.floor(gameWidth / desiredBrickWidth);
     const numRows = 2;
     const colors = ['red', 'orange', 'yellow', 'green', 'blue'];
 
@@ -116,7 +115,6 @@ function gameStart() {
     let paddleSpeed = 10;
     let moveLeft = false;
     let moveRight = false;
-    let gameActive = true;
 
     document.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') moveLeft = true;
@@ -153,8 +151,8 @@ function gameStart() {
 
     movePaddle();
 
-    let ballSpeedX = 3;
-    let ballSpeedY = -3;
+    let ballSpeedX = (Math.random() * 4 + 2) * (Math.random() < 0.5 ? -1 : 1); // Random between -6 and 6
+    let ballSpeedY = -(Math.random() * 2 + 3);
 
     function moveBall() {
         if (!isPaused) {
@@ -209,6 +207,7 @@ function gameStart() {
                     brick.setAttribute('data-hit', 'true');
                     brick.style.visibility = 'hidden';
                     score.textContent = +score.textContent + 1
+                    gameScore++
                     ballSpeedY *= -1;
                 }
                 if (Array.from(bricks).every(b => b.getAttribute('data-hit') === 'true')) {
@@ -221,9 +220,9 @@ function gameStart() {
                 resetBall();
                 livesValue.textContent = lives;
                 if (lives <= 0) {
-                    alert('Game Over!');
-                    clearInterval(timerInterval);
-                    location.reload();
+                    gameOver()
+                    // clearInterval(timerInterval);
+                    // location.reload();
                     return;
                 } else {
                     // isPaused = true
@@ -241,8 +240,8 @@ function gameStart() {
     function resetBall() {
         ball.style.left = `${gameArea.offsetWidth / 2}px`;
         ball.style.top = `${gameArea.offsetHeight / 2}px`;
-        ballSpeedX = 3;
-        ballSpeedY = -3;
+        ballSpeedX = (Math.random() * 4 + 2) * (Math.random() < 0.5 ? -1 : 1);
+        ballSpeedY = -(Math.random() * 2 + 3);
     }
 
     moveBall();
@@ -300,7 +299,24 @@ function pauseMenu() {
     gameArea.appendChild(pauseMenu);
 }
 
+function resetGameState() {
+    lives = 3;
+    score = 0;
+    gameTimer = 0;
+    isPaused = false;
+    updateUI();
+}
+
+function updateUI() {
+    document.getElementById('score').textContent = score;
+    document.getElementById('lives').textContent = lives;
+    document.getElementById('timer').textContent = '0s'
+}
+
 function gameFinish() {
+    isPaused = true;
+    clearInterval(timerInterval);
+
     const gameArea = document.getElementById('game-area');
 
     const finishMessage = document.createElement('div');
@@ -320,6 +336,37 @@ function gameFinish() {
     finishMessage.appendChild(restartButton)
     gameArea.appendChild(finishMessage);
 
+}
+
+function gameOver() {
     isPaused = true;
     clearInterval(timerInterval);
+
+    const gameArea = document.getElementById('game-area');
+
+    const gameOverMessage = document.createElement('div');
+    gameOverMessage.id = 'game-over';
+
+    const gameOverTitle = document.createElement('h2');
+    gameOverTitle.textContent = 'Game Over';
+    gameOverMessage.appendChild(gameOverTitle);
+
+    const finalScore = document.createElement('p');
+    finalScore.textContent = `Final Score: ${gameScore}`;
+    gameOverMessage.appendChild(finalScore);
+
+    const restartButton = document.createElement('button');
+    restartButton.id = 'restart-button';
+    restartButton.textContent = 'Play Again';
+    restartButton.addEventListener('click', () => {
+        gameOverMessage.remove();
+        resetGameState()
+        gameStart()
+        generateBricks()
+        moveBall()
+        movePaddle()
+        timer()
+    });
+    gameOverMessage.appendChild(restartButton);
+    gameArea.appendChild(gameOverMessage);
 }

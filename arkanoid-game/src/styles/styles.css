@@ -17,7 +17,11 @@ body {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
-#start-button, #restart-button, #pause-button, #resume-button, #restart-button {
+#start-button,
+#restart-button,
+#pause-button,
+#resume-button,
+#restart-button {
     gap: 10px;
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
@@ -29,12 +33,18 @@ body {
     transition: background-color 0.3s;
 }
 
-#start-button:hover, #restart-button:hover, #pause-button:hover, #resume-button:hover, #restart-button:hover {
+#start-button:hover,
+#restart-button:hover,
+#pause-button:hover,
+#resume-button:hover,
+#restart-button:hover {
     background-color: #45a049;
 }
 
 #game-container {
     width: 60%;
+    max-width: 800px;
+    min-width: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -128,7 +138,9 @@ body {
     z-index: 10;
 }
 
-#finish-message, #game-over, #victory-message {
+#finish-message,
+#game-over,
+#victory-message {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -151,29 +163,51 @@ body {
 #lives-img {
     transform-origin: center;
     animation: heartBeat 1.2s ease-in-out infinite;
-  }
-  
-  @keyframes heartBeat {
+}
+
+@keyframes heartBeat {
     0% {
-      transform: scale(1);
+        transform: scale(1);
     }
+
     14% {
-      transform: scale(1.3);
+        transform: scale(1.3);
     }
+
     28% {
-      transform: scale(1);
+        transform: scale(1);
     }
+
     42% {
-      transform: scale(1.3);
+        transform: scale(1.3);
     }
+
     70% {
-      transform: scale(1);
+        transform: scale(1);
     }
+
     100% {
-      transform: scale(1);
+        transform: scale(1);
     }
-  }
+}
 
-/* @media (max-width: 768px) {
+@media (max-width: 768px) {
+    #game-info {
+        font-size: 12px;
+    }
 
-} */
+    #start-button,
+    #restart-button,
+    #pause-button,
+    #resume-button,
+    #restart-button {
+        gap: 5px;
+        padding: 10px;
+        font-size: 0.7rem;
+    }
+
+    #pause-menu {
+        gap: 3px;
+        padding: 1rem;
+    }
+}
