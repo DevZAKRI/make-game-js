@@ -115,7 +115,7 @@ function gameStart() {
     document.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') moveLeft = true;
         if (event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') moveRight = true;
-        if (event.key === 'Space'){ // need logic to handle when life lost
+        if (event.key === 'Space') { // need logic to handle when life lost
             isPaused = !isPaused
         };
     });
@@ -140,7 +140,7 @@ function gameStart() {
                 newLeft += paddleSpeed;
             }
 
-            newLeft = Math.max(0, Math.min(gameAreaRect.width - paddleWidth -3, newLeft));
+            newLeft = Math.max(0, Math.min(gameAreaRect.width - paddleWidth - 3, newLeft));
 
             paddle.style.left = `${newLeft}px`;
             requestAnimationFrame(movePaddle);
@@ -149,8 +149,8 @@ function gameStart() {
 
     movePaddle();
 
-    let ballSpeedX = 1;
-    let ballSpeedY = 1;
+    let ballSpeedX = 2;
+    let ballSpeedY = -2;
 
     function moveBall() {
         if (!isPaused) {
@@ -162,7 +162,7 @@ function gameStart() {
             let newLeft = parseFloat(ball.style.left || gameAreaRect.width / 2);
             let newTop = parseFloat(ball.style.top || gameAreaRect.height / 2);
 
-            if (newLeft <= ballRect.width/2 || newLeft + ballRect.width >= gameAreaRect.width) {
+            if (newLeft <= ballRect.width / 2 || newLeft + ballRect.width >= gameAreaRect.width) {
                 ballSpeedX *= -1;
             }
 
@@ -176,6 +176,10 @@ function gameStart() {
                 ballRect.left < paddleRect.right &&
                 ballRect.right > paddleRect.left
             ) {
+                const paddleCenter = paddleRect.left + paddleRect.width / 2;
+                const ballCenter = ballRect.left + ballRect.width / 2;
+                const relativePosition = (ballCenter - paddleCenter) / (paddleRect.width / 2)
+                ballSpeedX = relativePosition * 2
                 ballSpeedY *= -1.05;
             }
 
@@ -208,8 +212,8 @@ function gameStart() {
                     return;
                 } else {
                     // isPaused = true
-                    newLeft = gameAreaRect.width/2 - ballRect.width
-                    newTop = gameAreaRect.height/2 - ballRect.height
+                    newLeft = gameAreaRect.width / 2 - ballRect.width
+                    newTop = gameAreaRect.height / 2 - ballRect.height
                 }
             }
 
@@ -228,7 +232,7 @@ function gameStart() {
     }
 
     moveBall();
-    timer(); 
+    timer();
 }
 
 function timer() {
