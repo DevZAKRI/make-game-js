@@ -140,8 +140,8 @@ function gameStart() {
 
     movePaddle();
 
-    let ballSpeedX = 1;
-    let ballSpeedY = 1;
+    let ballSpeedX = 2;
+    let ballSpeedY = -2;
 
     function moveBall() {
         if (!isPaused) {
@@ -167,6 +167,10 @@ function gameStart() {
                 ballRect.left < paddleRect.right &&
                 ballRect.right > paddleRect.left
             ) {
+                const paddleCenter = paddleRect.left + paddleRect.width / 2;
+                const ballCenter = ballRect.left + ballRect.width / 2;
+                const relativePosition = (ballCenter - paddleCenter) / (paddleRect.width / 2)
+                ballSpeedX = relativePosition * 2
                 ballSpeedY *= -1.05;
                 ball.style.top = `${paddleRect.top - ballRect.height}px`;
             }
@@ -199,8 +203,9 @@ function gameStart() {
                     location.reload();
                     return;
                 } else {
-                    newLeft = gameAreaRect.width / 2 - ballRect.width;
-                    newTop = gameAreaRect.height / 2 - ballRect.height;
+                    // isPaused = true
+                    newLeft = gameAreaRect.width / 2 - ballRect.width
+                    newTop = gameAreaRect.height / 2 - ballRect.height
                 }
             }
 
@@ -218,6 +223,7 @@ function gameStart() {
     }
 
     moveBall();
+    timer();
 }
 
 function timer() {
