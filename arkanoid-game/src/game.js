@@ -73,8 +73,8 @@ function generateBricks() {
 
     const gameWidth = gameArea.clientWidth;
     const desiredBrickWidth = 50;
-    const numBricksPerRow = Math.floor(gameWidth / desiredBrickWidth);
-    const numRows = 5;
+    const numBricksPerRow = Math.floor(gameWidth / desiredBrickWidth)-5;
+    const numRows = 2;
     const colors = ['red', 'orange', 'yellow', 'green', 'blue'];
 
     brickArea.style.gridTemplateColumns = `repeat(${numBricksPerRow}, 1fr)`;
@@ -100,7 +100,7 @@ function gameStart() {
     const ball = document.getElementById('ball');
     const livesValue = document.getElementById('lives');
 
-    let paddleSpeed = 10;
+    let paddleSpeed = 5;
     let moveLeft = false;
     let moveRight = false;
     let gameActive = true;
@@ -140,8 +140,8 @@ function gameStart() {
 
     movePaddle();
 
-    let ballSpeedX = 2;
-    let ballSpeedY = -2;
+    let ballSpeedX = 1;
+    let ballSpeedY = -1;
 
     function moveBall() {
         if (!isPaused) {
@@ -159,7 +159,7 @@ function gameStart() {
 
             if (newTop <= 0) {
                 ballSpeedY *= -1;
-            }
+            }                                                                                                                                                                                                                                            
 
             if (
                 ballRect.bottom >= paddleRect.top &&
@@ -174,6 +174,14 @@ function gameStart() {
                 ballSpeedY *= -1.05;
                 ball.style.top = `${paddleRect.top - ballRect.height}px`;
             }
+
+
+            // if (
+            //     ballRect.left+ball.width >= paddleRect.left 
+            // ) {
+            //     ball.style.left = `${paddleRect.left-ball.width}`
+            //     console.log("useless")
+            // }
 
             bricks.forEach(brick => {
                 const brickRect = brick.getBoundingClientRect();

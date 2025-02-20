@@ -71,10 +71,10 @@ body {
     width: 100px;
     min-width: 60px;
     max-width: 15%;
-    height: 20px;
+    height: 10px;
     background-color: #4caf50;
-    border-radius: 10px;
-    bottom: 20px;
+    /* border-radius: 10px; */
+    bottom: 0;
 
 }
 
