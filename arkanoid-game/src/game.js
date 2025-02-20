@@ -30,6 +30,8 @@ function createGameUI() {
     livesValue.textContent = lives;
     livesSpan.appendChild(livesValue);
 
+    const Scorespan = document.createElement('span')
+    Scorespan.innerHTML = 'Score: <span id="score">0</span>'
     const timerSpan = document.createElement('span');
     timerSpan.innerHTML = 'Time: <span id="timer">0s</span>';
 
@@ -39,6 +41,7 @@ function createGameUI() {
     pauseButton.addEventListener('click', togglePause);
 
     gameInfo.appendChild(livesSpan);
+    gameInfo.appendChild(Scorespan);
     gameInfo.appendChild(timerSpan);
     gameInfo.appendChild(pauseButton);
 
@@ -148,6 +151,7 @@ function gameStart() {
             const ballRect = ball.getBoundingClientRect();
             const gameAreaRect = gameArea.getBoundingClientRect();
             const paddleRect = paddle.getBoundingClientRect();
+            const score = document.getElementById('score')
             const bricks = document.querySelectorAll('.brick');
 
             let newLeft = parseFloat(ball.style.left || gameAreaRect.width / 2);
@@ -194,6 +198,7 @@ function gameStart() {
                 ) {
                     brick.setAttribute('data-hit', 'true');
                     brick.style.visibility = 'hidden';
+                    score.textContent= +score.textContent+1
                     ballSpeedY *= -1;
                 }
                 if (Array.from(bricks).every(b => b.getAttribute('data-hit') === 'true')) {
