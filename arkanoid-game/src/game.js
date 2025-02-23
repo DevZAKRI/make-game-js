@@ -151,7 +151,7 @@ function gameStart() {
 
     movePaddle();
 
-    let ballSpeedX = (Math.random() * 4 + 2) * (Math.random() < 0.5 ? -1 : 1); // Random between -6 and 6
+    let ballSpeedX = (Math.random() * 4 + 2) * (Math.random() < 0.5 ? -1 : 1);
     let ballSpeedY = -(Math.random() * 2 + 3);
 
     function moveBall() {
