@@ -154,7 +154,7 @@ function gameStart() {
 
     movePaddle();
 
-    let ballSpeedX = (Math.random() * 4 + 2) * (Math.random() < 0.5 ? -1 : 1); // Random between -6 and 6
+    let ballSpeedX = (Math.random() * 4 + 2) * (Math.random() < 0.5 ? -1 : 1);
     let ballSpeedY = -(Math.random() * 2 + 3);
 
     function moveBall() {
@@ -168,7 +168,7 @@ function gameStart() {
             let newLeft = parseFloat(ball.style.left || gameAreaRect.width / 2);
             let newTop = parseFloat(ball.style.top || gameAreaRect.height / 2);
 
-            if (newLeft <= ballRect.width / 2 || newLeft + ballRect.width >= gameAreaRect.width) {
+            if (newLeft <= ballRect.width / 2+10 || newLeft + ballRect.width >= gameAreaRect.width) {
                 ballSpeedX *= -1;
             }
 
