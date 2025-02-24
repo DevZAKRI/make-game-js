@@ -112,7 +112,7 @@ function gameStart() {
     const ball = document.getElementById('ball');
     const livesValue = document.getElementById('lives');
 
-    let paddleSpeed = 10;
+    const paddleSpeed = 5;
     let moveLeft = false;
     let moveRight = false;
 
@@ -127,13 +127,16 @@ function gameStart() {
         if (event.key === ' ') togglePause();
     });
 
-    timer();
+    // timer();
 
     function movePaddle() {
         if (!isPaused) {
             const gameAreaRect = gameArea.getBoundingClientRect();
             const paddleWidth = paddle.offsetWidth;
             let newLeft = paddle.offsetLeft;
+
+            console.log(newLeft);
+            
 
             if (moveLeft) {
                 newLeft -= paddleSpeed;
@@ -244,6 +247,7 @@ function gameStart() {
         ballSpeedY = -(Math.random() * 2 + 3);
     }
 
+    // movePaddle()
     moveBall();
     timer();
 }
@@ -360,12 +364,12 @@ function gameOver() {
     restartButton.textContent = 'Play Again';
     restartButton.addEventListener('click', () => {
         gameOverMessage.remove();
+        const gameContainer = document.getElementById('game-container')
+        gameContainer.remove()
+        timer()
+        createGameUI()
         resetGameState()
         gameStart()
-        generateBricks()
-        moveBall()
-        movePaddle()
-        timer()
     });
     gameOverMessage.appendChild(restartButton);
     gameArea.appendChild(gameOverMessage);
