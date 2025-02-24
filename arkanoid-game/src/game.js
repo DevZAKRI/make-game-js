@@ -3,6 +3,10 @@ let gameScore = 0;
 let gameTimer = 0;
 let timerInterval;
 let isPaused = false;
+let isRespawn = false;
+let isGameOver = false;
+let moveLeft = false;
+let moveRight = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     const startMenu = document.getElementById('start-menu');
@@ -10,6 +14,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     startButton.addEventListener('click', () => {
         createGameUI();
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') moveLeft = true;
+            if (event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') moveRight = true;
+        });
+    
+        document.addEventListener('keyup', (event) => {
+            if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') moveLeft = false;
+            if (event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') moveRight = false;
+            if (event.key === ' ' && !isGameOver) togglePause();
+            if (event.key === 'ArrowUp' || event.key.toLowerCase() === 'w') {
+                if (isRespawn) {
+                    isRespawn = false
+                }
+            };
+        });
         gameStart();
         startMenu.remove();
     });
@@ -72,7 +91,6 @@ function createGameUI() {
 
     gameContainer.appendChild(gameInfo);
     gameContainer.appendChild(gameArea);
-
     document.body.appendChild(gameContainer);
     paddle.style.left = `44%`;
     generateBricks();
@@ -106,37 +124,27 @@ window.addEventListener('resize', () => {
     location.reload();
 });
 
+
 function gameStart() {
     const gameArea = document.getElementById('game-area');
     const paddle = document.getElementById('paddle');
     const ball = document.getElementById('ball');
     const livesValue = document.getElementById('lives');
 
-    const paddleSpeed = 5;
-    let moveLeft = false;
-    let moveRight = false;
+    const paddleSpeed = 10;
 
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') moveLeft = true;
-        if (event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') moveRight = true;
-    });
 
-    document.addEventListener('keyup', (event) => {
-        if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') moveLeft = false;
-        if (event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') moveRight = false;
-        if (event.key === ' ') togglePause();
-    });
 
     // timer();
 
     function movePaddle() {
-        if (!isPaused) {
+        if (!isPaused && !isRespawn && !isGameOver) {
             const gameAreaRect = gameArea.getBoundingClientRect();
             const paddleWidth = paddle.offsetWidth;
             let newLeft = paddle.offsetLeft;
 
             console.log(newLeft);
-            
+
 
             if (moveLeft) {
                 newLeft -= paddleSpeed;
@@ -158,7 +166,7 @@ function gameStart() {
     let ballSpeedY = -(Math.random() * 2 + 3);
 
     function moveBall() {
-        if (!isPaused) {
+        if (!isPaused && !isRespawn && !isGameOver) {
             const ballRect = ball.getBoundingClientRect();
             const gameAreaRect = gameArea.getBoundingClientRect();
             const paddleRect = paddle.getBoundingClientRect();
@@ -168,7 +176,7 @@ function gameStart() {
             let newLeft = parseFloat(ball.style.left || gameAreaRect.width / 2);
             let newTop = parseFloat(ball.style.top || gameAreaRect.height / 2);
 
-            if (newLeft <= ballRect.width / 2+10 || newLeft + ballRect.width >= gameAreaRect.width) {
+            if (newLeft <= ballRect.width || newLeft + ballRect.width >= gameAreaRect.width) {
                 ballSpeedX *= -1;
             }
 
@@ -223,11 +231,13 @@ function gameStart() {
                 resetBall();
                 livesValue.textContent = lives;
                 if (lives <= 0) {
+                    isGameOver = true;
                     gameOver()
                     // clearInterval(timerInterval);
                     // location.reload();
                     return;
                 } else {
+                    isRespawn = true;
                     // isPaused = true
                     newLeft = gameAreaRect.width / 2 - ballRect.width
                     newTop = gameAreaRect.height / 2 - ballRect.height
@@ -366,6 +376,9 @@ function gameOver() {
         gameOverMessage.remove();
         const gameContainer = document.getElementById('game-container')
         gameContainer.remove()
+        // document.removeEventListener("keyup", keyup)
+        // document.removeEventListener("keydown", keydown)
+        isGameOver = false;
         timer()
         createGameUI()
         resetGameState()
