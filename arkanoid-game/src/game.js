@@ -205,7 +205,7 @@ function gameStart() {
             //     ball.style.left = `${paddleRect.left-ball.width}`
             //     console.log("useless")
             // }
-
+            let collision = 0
             bricks.forEach(brick => {
                 const brickRect = brick.getBoundingClientRect();
                 if (
@@ -213,13 +213,14 @@ function gameStart() {
                     ballRect.top < brickRect.bottom &&
                     ballRect.left < brickRect.right &&
                     ballRect.right > brickRect.left &&
-                    brick.getAttribute('data-hit') === 'false'
+                    brick.getAttribute('data-hit') === 'false' && collision == 0
                 ) {
                     brick.setAttribute('data-hit', 'true');
                     brick.style.visibility = 'hidden';
-                    score.textContent = +score.textContent + 1
-                    gameScore++
+                    gameScore += 5
+                    score.textContent = gameScore
                     ballSpeedY *= -1;
+                    collision++
                 }
                 if (Array.from(bricks).every(b => b.getAttribute('data-hit') === 'true')) {
                     gameFinish();
